@@ -1,0 +1,20 @@
+{
+    "name": "shangxin/yii-zt-sms",
+    "description": "zhutong sms service",
+    "type": "library",
+    "require": {
+        "php": ">=5.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "luowei",
+            "email": "786407418@qq.com"
+        }
+    ],
+	"autoload": {
+        "psr-4": { 
+			"shangxin\\zt\\": "src"
+		}
+    }
+}
