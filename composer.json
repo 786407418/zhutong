@@ -11,5 +11,10 @@
             "name": "luowei",
             "email": "786407418@qq.com"
         }
-    ]
+    ],
+	"autoload": {
+        "psr-4": { 
+			"shangxin\\zt\\": "src"
+		}
+    }
 }
