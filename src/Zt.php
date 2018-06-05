@@ -3,57 +3,47 @@ namespace shangxin\zt;
 use yii\base\Component;
 class Zt extends Component {
 
-
     public $params = [];
 
-    public static $_error = '';
-
-    public $username = 'hzjdhy';
-    public $password = '5eAcgq';
-    public $market_username = 'hzjdyx';
-    public $market_password = 'EP6X8s';
-    public $voice_username = 'hzjdyzm';
-    public $voice_password = 'VhYS7V';
+    public $username ;
+    public $password;
+    public $market_username;
+    public $market_password;
+    public $voice_username;
+    public $voice_password;
 
 
     # 单条接口地址
-    public $_single_url = 'http://www.api.zthysms.com/sendSms.do';
+    public $_single_url;
     # 语音接口地址
-    public $_voice_url = 'http://www.yzmsms.cn/sendSmsYY.do';
+    public $_voice_url;
     # 批量接口地址
-    public $_batch_url = 'http://www.api.zthysms.com/sendSmsBatch.do';
+    public $_batch_url;
     # 批量定时接口地址（暂不支持）
-    public $_batch_time_url = 'http://www.api.zthysms.com/sendSmsBatchTiming.do';
+    public $_batch_time_url;
     # 批量个性化接口地址
-    public $_batch_identity_url = 'http://www.api.zthysms.com/sendSmsBatchIdentity.do';
+    public $_batch_identity_url;
 
     public  $_tkey = 0;
 
-    public function before($content){
-        $this->params['_tkey'] = date('YmdHis',time());
-        $this->params['content'] = $content;
-
-//        $this->params['password'] = md5(md5($this->password) . $this->params['_tkey']);
+    public function before(){
+        $this->params['tkey'] = date('YmdHis');
+        return $this;
     }
+
 
     /**
      * 发送单条消息
      */
-    public function sendSingleSms($phone, $content)
+    public function sendSingleSms($phone,$content)
     {
         $this->params = array_merge(
             [
+                'content'=>$content,
                 'username'=>$this->username,
                 'mobile'=>$phone,
-                'password'=>md5(md5($this->password) . $this->params['_tkey'])
+                'password'=>md5(md5($this->password) . $this->params['tkey'])
             ],$this->params);
-
-
-//        $this->params = array_merge([
-//            'username' => $this->username,
-//            'mobile' => $phone,
-//            'content' => $content,
-//        ],  $this->params);
 
         $sendRes = $this->sendRequest($this->_single_url, $this->params);
         $sendArr = explode(',', $sendRes);
@@ -65,11 +55,6 @@ class Zt extends Component {
      */
     public function sendVoiceSMs($phone, $content)
     {
-//        $this->params = array_merge([
-//            'username' => $this->voice_username,
-//            'mobile' => $phone,
-//            'content' => $content,
-//        ],  $this->params);
         $this->params = array_merge(
             [
                 'username'=>$this->voice_username,
@@ -87,12 +72,6 @@ class Zt extends Component {
      */
     public function sendBatchSms($phones, $content)
     {
-//        $param = array_merge([
-//            'username' => self::MARKET_USERNAME,
-//            'mobile' => $phones,
-//            'content' => $content,
-//        ],  $this->getCommonFields(self::MARKET_PASSWORD));
-
         $this->params = array_merge(
             [
                 'username'=>$this->market_username,
@@ -110,11 +89,6 @@ class Zt extends Component {
     {
         $requestRes = $this->sendPost($url, $param, [], true);
         return $requestRes;
-    }
-
-    public static function getError()
-    {
-        return self::$_error;
     }
 
     public function sendPost($url, $param, $header = [], $isPost = true)
